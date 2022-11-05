@@ -10,22 +10,28 @@ class Vampire {
 
   // Adds the vampire as an offspring of this vampire
   addOffspring(vampire) {
-
+    this.offspring.push(vampire);
+    vampire.creator = this;
   }
 
   // Returns the total number of vampires created by that vampire
   get numberOfOffspring() {
-
+    return this.offspring.length;
   }
 
   // Returns the number of vampires away from the original vampire this vampire is
   get numberOfVampiresFromOriginal() {
-
+    let count = 0;
+    if (this.creator) {
+      count++;
+      count += this.creator.numberOfVampiresFromOriginal;
+    }
+    return count;
   }
 
   // Returns true if this vampire is more senior than the other vampire. (Who is closer to the original vampire)
   isMoreSeniorThan(vampire) {
-
+    return this.numberOfVampiresFromOriginal < vampire.numberOfVampiresFromOriginal;
   }
 
   /** Stretch **/
@@ -35,7 +41,41 @@ class Vampire {
   // For example:
   // * when comparing Ansel and Sarah, Ansel is the closest common anscestor.
   // * when comparing Ansel and Andrew, Ansel is the closest common anscestor.
+
+  allAncestors() {
+    let creators = [];
+    creators.push(this);
+    if (this.creator) {
+      creators = creators.concat(this.creator.allAncestors());
+    }
+    return creators;
+  }
+
   closestCommonAncestor(vampire) {
+
+    const thisCreators = this.allAncestors();
+    const vampireCreators = vampire.allAncestors();
+
+    for (const creator of thisCreators) {
+      for (const vCreator of vampireCreators) {
+        if (creator === vCreator) {
+          return creator;
+        }
+      }
+    }
+  }
+  
+  vampireWithName(name) {
+
+  }
+
+  // Returns the total number of vampires that exist
+  get totalDescendents() {
+
+  }
+
+  // Returns an array of all the vampires that were converted after 1980
+  get allMillennialVampires() {
 
   }
 }
